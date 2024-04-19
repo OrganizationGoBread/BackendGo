@@ -1,0 +1,6 @@
+00DADOS PRODUTOS30-11-2023 01:12:0001
+02mcdonalds@gmail.com           guilherme@gmail.com           guilherme                     11985893186gui                                                          
+03Maionese                      
+03Café                          
+03Leite                         
+0100000goBreadGroup!
