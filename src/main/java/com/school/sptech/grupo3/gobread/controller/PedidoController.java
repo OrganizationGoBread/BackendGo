@@ -43,13 +43,13 @@ public class PedidoController {
         return ResponseEntity.status(201).body(pedidoResponse);
     }
 
-    @PutMapping("/att-status-pendente/${id}")
+    @PutMapping("/att-status-pendente/{id}")
     public ResponseEntity<Void> atualizarStatusPendente(@PathVariable int id){
         this.pedidoService.atualizarStatusPendente(id);
         return ResponseEntity.status(200).build();
     }
 
-    @PutMapping("/att-status-confirmado/${id}")
+    @PutMapping("/att-status-confirmado/{id}")
     public ResponseEntity<Void> atualizarStatusConfirmado(@PathVariable int id, @RequestParam Integer codigoVerificacao){
         this.pedidoService.atualizarStatusConfirmado(id, codigoVerificacao);
         return ResponseEntity.status(200).build();
