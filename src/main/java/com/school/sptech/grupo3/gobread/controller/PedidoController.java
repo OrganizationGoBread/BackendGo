@@ -2,10 +2,7 @@ package com.school.sptech.grupo3.gobread.controller;
 
 import com.school.sptech.grupo3.gobread.controller.request.PedidoRequest;
 import com.school.sptech.grupo3.gobread.controller.response.PedidoResponse;
-import com.school.sptech.grupo3.gobread.entity.Pedido;
 import com.school.sptech.grupo3.gobread.service.PedidoService;
-import jakarta.validation.Valid;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,15 +40,15 @@ public class PedidoController {
         return ResponseEntity.status(201).body(pedidoResponse);
     }
 
-    @PutMapping("/att-status-pendente/${id}")
-    public ResponseEntity<Void> atualizarStatusPendente(@PathVariable int id){
-        this.pedidoService.atualizarStatusPendente(id);
+    @PutMapping("/att-status-pendente/{id}")
+    public ResponseEntity<Void> atualizarStatusPendente(@PathVariable Integer id){
+        this.pedidoService.atualizarStatusEntregaPendente(id);
         return ResponseEntity.status(200).build();
     }
 
-    @PutMapping("/att-status-confirmado/${id}")
-    public ResponseEntity<Void> atualizarStatusConfirmado(@PathVariable int id, @RequestParam Integer codigoVerificacao){
-        this.pedidoService.atualizarStatusConfirmado(id, codigoVerificacao);
+    @PutMapping("/att-status-confirmado/{id}")
+    public ResponseEntity<Void> atualizarStatusConfirmado(@PathVariable Integer id, @RequestParam Integer codigoVerificacao){
+        this.pedidoService.finalizarPedido(id, codigoVerificacao);
         return ResponseEntity.status(200).build();
     }
 

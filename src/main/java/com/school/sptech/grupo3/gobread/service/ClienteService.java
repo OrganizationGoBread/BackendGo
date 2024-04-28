@@ -5,6 +5,7 @@ import com.school.sptech.grupo3.gobread.controller.request.ClienteUpdateRequest;
 import com.school.sptech.grupo3.gobread.controller.request.LoginRequest;
 import com.school.sptech.grupo3.gobread.controller.response.ClienteResponse;
 import com.school.sptech.grupo3.gobread.controller.response.LoginClienteResponse;
+import com.school.sptech.grupo3.gobread.controller.response.PedidoClienteResponse;
 import com.school.sptech.grupo3.gobread.entity.Cliente;
 import com.school.sptech.grupo3.gobread.entity.ItemPedido;
 import com.school.sptech.grupo3.gobread.entity.Pedido;
@@ -15,6 +16,7 @@ import com.school.sptech.grupo3.gobread.repository.ClienteRepository;
 import com.school.sptech.grupo3.gobread.repository.ItemPedidoRepository;
 import com.school.sptech.grupo3.gobread.repository.PedidoRepository;
 import com.school.sptech.grupo3.gobread.security.GerenciadorTokenJwt;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,7 +44,15 @@ public class ClienteService {
     public ClienteResponse buscarClientePorId(int id) throws UsuarioNaoEncontradoException {
         Cliente cliente = this.rep.findById(id).orElseThrow(
                 () -> new UsuarioNaoEncontradoException());
+        List<Pedido> pedidosAtivos = new ArrayList<>();
+        for (int i = 0; i < cliente.getPedidos().size(); i++) {
+            if (cliente.getPedidos().get(i).getStatus().equalsIgnoreCase("confirmado") || cliente.getPedidos().get(i).getStatus().equalsIgnoreCase("entrega pendente")) {
+                pedidosAtivos.add(cliente.getPedidos().get(i));
+            }
+        }
+        cliente.setPedidos(pedidosAtivos);
         ClienteResponse clienteResponse = ClienteMapper.clienteToClienteResponse(cliente);
+
         return clienteResponse;
     }
 

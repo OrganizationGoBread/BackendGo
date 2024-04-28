@@ -2,6 +2,7 @@ package com.school.sptech.grupo3.gobread.service;
 
 import com.school.sptech.grupo3.gobread.controller.request.PedidoRequest;
 import com.school.sptech.grupo3.gobread.controller.response.PedidoResponse;
+import com.school.sptech.grupo3.gobread.entity.ItemPedido;
 import com.school.sptech.grupo3.gobread.entity.Pedido;
 import com.school.sptech.grupo3.gobread.estruturaPilhaFila.FilaObj;
 import com.school.sptech.grupo3.gobread.estruturaPilhaFila.PilhaObj;
@@ -68,30 +69,51 @@ public class PedidoService {
         return PedidoMapper.toPedidoResponse(pedido);
     }
 
-    public void atualizarStatusPendente(int id) {
+    public void atualizarStatusEntregaPendente(int id) {
         Pedido pedido = this.pedidoRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado")
         );
-        if(pedido.getStatus().equals("pendente")){
+        if(pedido.getStatus().equals("entrega pendente")){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Pedido já está pendente");
         }
-        pedido.setStatus("pendente");
+        pedido.setStatus("entrega pendente");
         Random random = new Random();
         pedido.setCodigoVerificacao(random.nextInt(9000)+ 1000);
         pedidoRepository.save(pedido);
     }
 
-    public void atualizarStatusConfirmado(int id, Integer codigoVerificacao) {
+    public void finalizarPedido(int id, Integer codigoVerificacao) {
         Pedido pedido = this.pedidoRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado")
         );
-        if(pedido.getStatus().equals("confirmado")){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Pedido já está confirmado");
+        if(pedido.getStatus().equals("finalizado")){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Pedido já está finalizado");
         }
-        if(pedido.getCodigoVerificacao() != codigoVerificacao){
+        if(pedido.getCodigoVerificacao().intValue() != codigoVerificacao.intValue()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código de verificação incorreto!");
         }
-        pedido.setStatus("confirmado");
+        pedido.setStatus("finalizado");
+        pedidoRepository.save(pedido);
+        gerarNovoPedido(pedido);
+    }
+
+    public void gerarNovoPedido(Pedido novoPedido) {
+        Pedido pedido = new Pedido();
+        List<ItemPedido> itensPedido = novoPedido.getItensPedido();
+        List<ItemPedido> itensPedidoNovo = new ArrayList<>();
+        for (int i = 0; i < itensPedido.size(); i++) {
+            ItemPedido itemPedido = new ItemPedido();
+            itemPedido.setPedido(pedido);
+            itemPedido.setQuantidade(itensPedido.get(i).getQuantidade());
+            itemPedido.setProduto(itensPedido.get(i).getProduto());
+            itensPedidoNovo.add(itemPedido);
+        }
+
+        pedido.setItensPedido(itensPedidoNovo);
+        pedido.setCliente(novoPedido.getCliente());
+        pedido.setComercio(novoPedido.getComercio());
+        pedido.setDiaEntrega(novoPedido.getDiaEntrega());
+        pedido.setHorarioEntrega(novoPedido.getHorarioEntrega());
         pedidoRepository.save(pedido);
     }
 }

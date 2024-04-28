@@ -15,6 +15,8 @@ public class PedidoClienteResponse {
     private Integer id;
     private String diaEntrega;
     private String horarioEntrega;
+    private String status;
+    private Integer codigoVerificacao;
     private List<ItemPedidoClienteResponse> itensPedido;
     private ComercioClienteResponse comercio;
 }

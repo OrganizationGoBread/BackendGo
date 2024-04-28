@@ -2,9 +2,6 @@ package com.school.sptech.grupo3.gobread.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.LifecycleState;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,7 +23,7 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "fkComercio", referencedColumnName = "id")
     private Comercio comercio;
-    private String status;
-    private Integer codigoVerificacao;
+    private String status = "confirmado";
+    private Integer codigoVerificacao = 0000;
 
 }
