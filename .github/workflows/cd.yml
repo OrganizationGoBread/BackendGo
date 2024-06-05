@@ -1,0 +1,22 @@
+name: "CD goBread"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Pull Docker image
+        run: docker pull matheusmartins1227/gobread_backend_imagem:latest
+
+      - name: Stop Docker container
+        run: docker stop gobread-actions || true
+
+      - name: Remove Docker container
+        run: docker rm gobread-actions || true
+
+      - name: Run Docker container with no security profile
+        run: docker run --name gobread-actions -d -p 8080:8080 matheusmartins1227/gobread_backend_imagem:latest
