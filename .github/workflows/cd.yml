@@ -1,4 +1,4 @@
-name: "CD goBread" #teste
+name: "CD goBread"
 
 on:
   push:
@@ -20,3 +20,6 @@ jobs:
 
       - name: Run Docker container with no security profile
         run: docker run --name gobread-actions -d -p 8080:8080 matheusmartins1227/gobread_backend_imagem:latest
+
+      - name: Start Container
+      - run: docker start gobread-actions
