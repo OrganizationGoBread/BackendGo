@@ -1,4 +1,4 @@
-name: "CD goBread" #teste deploy
+name: "CD goBread"
 
 on:
   push:
