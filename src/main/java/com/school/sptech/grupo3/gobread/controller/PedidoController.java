@@ -52,4 +52,10 @@ public class PedidoController {
         return ResponseEntity.status(200).build();
     }
 
+    @PutMapping("/att-status-pendente/lista")
+    public ResponseEntity<Void> atualizarStatusPendenteLista(@RequestBody List<Integer> listIdsPedidos){
+        this.pedidoService.atualizarStatusEntregaPendenteMassa(listIdsPedidos);
+        return ResponseEntity.status(200).build();
+    }
+
 }

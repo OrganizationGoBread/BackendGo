@@ -86,34 +86,32 @@ public class PedidoService {
         Pedido pedido = this.pedidoRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado")
         );
-        if(pedido.getStatus().equals("finalizado")){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Pedido já está finalizado");
-        }
+
         if(pedido.getCodigoVerificacao().intValue() != codigoVerificacao.intValue()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código de verificação incorreto!");
         }
-        pedido.setStatus("finalizado");
-        pedidoRepository.save(pedido);
-        gerarNovoPedido(pedido);
-    }
-
-    public void gerarNovoPedido(Pedido novoPedido) {
-        Pedido pedido = new Pedido();
-        List<ItemPedido> itensPedido = novoPedido.getItensPedido();
-        List<ItemPedido> itensPedidoNovo = new ArrayList<>();
-        for (int i = 0; i < itensPedido.size(); i++) {
-            ItemPedido itemPedido = new ItemPedido();
-            itemPedido.setPedido(pedido);
-            itemPedido.setQuantidade(itensPedido.get(i).getQuantidade());
-            itemPedido.setProduto(itensPedido.get(i).getProduto());
-            itensPedidoNovo.add(itemPedido);
+        if(pedido.getStatus().equals("entrega pendente")){
+            pedido.setStatus("confirmado");
+            pedido.setCodigoVerificacao(0);
+            pedidoRepository.deleteById(id);
+            pedidoRepository.save(pedido);
         }
 
-        pedido.setItensPedido(itensPedidoNovo);
-        pedido.setCliente(novoPedido.getCliente());
-        pedido.setComercio(novoPedido.getComercio());
-        pedido.setDiaEntrega(novoPedido.getDiaEntrega());
-        pedido.setHorarioEntrega(novoPedido.getHorarioEntrega());
-        pedidoRepository.save(pedido);
+    }
+
+    public void atualizarStatusEntregaPendenteMassa(List<Integer> listIdsPedidos) {
+        while (!listIdsPedidos.isEmpty()) {
+            Pedido pedido = this.pedidoRepository.findById(listIdsPedidos.get(0)).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido não encontrado")
+            );
+            if(pedido.getStatus().equals("entrega pendente")){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Pedido já está pendente");
+            }
+            pedido.setStatus("entrega pendente");
+            Random random = new Random();
+            pedido.setCodigoVerificacao(random.nextInt(9000)+ 1000);
+            pedidoRepository.save(pedido);
+            listIdsPedidos.remove(0);
+        }
     }
 }
