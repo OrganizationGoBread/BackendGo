@@ -1,4 +1,4 @@
-name: "CD goBread" #Deploy final -teste 3v
+name: "CD goBread" #Deploy final
 
 on:
   push:s
