@@ -1,7 +1,7 @@
-name: "CD goBread" #Deploy final -teste 3v
+name: "CD goBread"
 
 on:
-  push:s
+  push:
     branches:
       - main
 
