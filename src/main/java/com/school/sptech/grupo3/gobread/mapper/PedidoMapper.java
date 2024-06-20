@@ -29,6 +29,7 @@ public class PedidoMapper {
     public static PedidoComercioResponse toPedidoComercioResponse(Pedido pedido){
         PedidoComercioResponse pedidoComercioResponse = new PedidoComercioResponse();
         pedidoComercioResponse.setId(pedido.getId());
+        pedidoComercioResponse.setStatus(pedido.getStatus());
         pedidoComercioResponse.setHorarioEntrega(pedido.getHorarioEntrega());
         pedidoComercioResponse.setItensPedido(ItemPedidoMapper.toListItemPedidoClienteResponse(pedido.getItensPedido()));
         pedidoComercioResponse.setDiaEntrega(pedido.getDiaEntrega());
