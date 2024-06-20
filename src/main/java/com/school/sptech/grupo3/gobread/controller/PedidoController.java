@@ -1,6 +1,7 @@
 package com.school.sptech.grupo3.gobread.controller;
 
 import com.school.sptech.grupo3.gobread.controller.request.PedidoRequest;
+import com.school.sptech.grupo3.gobread.controller.response.PedidoComercioResponse;
 import com.school.sptech.grupo3.gobread.controller.response.PedidoResponse;
 import com.school.sptech.grupo3.gobread.service.PedidoService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,12 @@ public class PedidoController {
     public ResponseEntity<List<String>> cadastrar(@RequestBody PedidoRequest pedidoRequest){
         List<String> listaDeDias = this.pedidoService.cadastrar(pedidoRequest);
         return ResponseEntity.status(200).body(listaDeDias);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PedidoComercioResponse> buscarPorId(@PathVariable int id) {
+        PedidoComercioResponse pedidoResponse = this.pedidoService.buscarPedidoPorId(id);
+        return ResponseEntity.ok(pedidoResponse);
     }
 
     @DeleteMapping("/{id}")

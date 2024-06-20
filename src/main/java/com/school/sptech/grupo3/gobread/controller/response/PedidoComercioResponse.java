@@ -13,6 +13,7 @@ public class PedidoComercioResponse {
     private Integer id;
     private String diaEntrega;
     private String horarioEntrega;
+    private String status;
     private List<ItemPedidoClienteResponse> itensPedido;
     private ClienteComercioResponse cliente;
 }
