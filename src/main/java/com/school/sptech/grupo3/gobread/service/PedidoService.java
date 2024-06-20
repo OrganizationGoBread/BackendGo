@@ -1,6 +1,7 @@
 package com.school.sptech.grupo3.gobread.service;
 
 import com.school.sptech.grupo3.gobread.controller.request.PedidoRequest;
+import com.school.sptech.grupo3.gobread.controller.response.PedidoComercioResponse;
 import com.school.sptech.grupo3.gobread.controller.response.PedidoResponse;
 import com.school.sptech.grupo3.gobread.entity.ItemPedido;
 import com.school.sptech.grupo3.gobread.entity.Pedido;
@@ -96,7 +97,6 @@ public class PedidoService {
             pedidoRepository.deleteById(id);
             pedidoRepository.save(pedido);
         }
-
     }
 
     public void atualizarStatusEntregaPendenteMassa(List<Integer> listIdsPedidos) {
@@ -113,5 +113,11 @@ public class PedidoService {
             pedidoRepository.save(pedido);
             listIdsPedidos.remove(0);
         }
+    }
+
+    public PedidoComercioResponse buscarPedidoPorId(int id) {
+        Pedido pedido = this.pedidoRepository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comercio não encontrado"));
+        return PedidoMapper.toPedidoComercioResponse(pedido);
     }
 }
